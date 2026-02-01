@@ -11,8 +11,8 @@ export const getConfig = () => {
     MODERATORS_IDS,
   } = process.env;
 
-  const allowedRoles = ALLOWED_FOR_IDS?.split(", ") ?? [];
-  const moderators = MODERATORS_IDS?.split(", ") ?? [];
+  const allowedRoles = (ALLOWED_FOR_IDS?.split(",") ?? []).map((w) => w.trim());
+  const moderators = (MODERATORS_IDS?.split(",") ?? []).map((w) => w.trim());
 
   const samplesDirpath = join(__dirname, "..", "..", "assets", "samples");
   const hasSamplesDir = existsSync(samplesDirpath);
