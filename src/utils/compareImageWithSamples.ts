@@ -12,9 +12,17 @@ export const compareImageWithSamples = async (file: Buffer<ArrayBuffer>) => {
   const scamsFilenames = await readdir(samplesPath);
 
   for (const p of scamsFilenames) {
-    const sampleHash = await getSampleHash(join(samplesPath, p));
+    try {
+      const sampleHash = await getSampleHash(join(samplesPath, p));
 
-    if (leven(sampleHash, fileHash) <= MIN_MATCH_WITH_SAMPLE_IMAGE) return true;
+      if (leven(sampleHash, fileHash) <= MIN_MATCH_WITH_SAMPLE_IMAGE)
+        return true;
+    } catch (err) {
+      if (!p.endsWith(".gitkeep"))
+        console.log(
+          `[error]: couldn't process the file ${p} in sample dir, please, try converting the image to another format`,
+        );
+    }
   }
 
   return false;
