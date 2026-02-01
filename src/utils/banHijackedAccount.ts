@@ -32,56 +32,52 @@ export const banHijackedAccount = async ({
       (c) => c.type === ChannelType.GuildText && c.viewable,
     );
 
-    const promises: Promise<unknown>[] = [];
     for (const channel of channels?.values() ?? []) {
       if (!channel.isTextBased() || channel.isDMBased() || channel.isThread())
         continue;
 
-      promises.push(
-        channel.messages
-          .fetch({ limit: 100 })
-          .then(async (messages) => {
-            if (messages.size === 0) return;
+      channel.messages
+        .fetch({ limit: 100 })
+        .then(async (messages) => {
+          if (messages.size === 0) return;
 
-            for (const msg of messages.values()) {
-              const idade = Date.now() - msg.createdTimestamp;
+          for (const msg of messages.values()) {
+            const idade = Date.now() - msg.createdTimestamp;
 
-              const isTheSameHijackedUser = msg.author.id === member.id;
-              const isFromlast14Days = idade < _14_days_duration.inMilliseconds;
+            const isTheSameHijackedUser = msg.author.id === member.id;
+            const isFromlast14Days = idade < _14_days_duration.inMilliseconds;
 
-              if (isTheSameHijackedUser && isFromlast14Days) {
-                await msg.delete().catch((err) => {
-                  console.log(
-                    "[error] couldn't delete message due to unexpected exception",
-                    err,
-                  );
-                });
+            if (isTheSameHijackedUser && isFromlast14Days) {
+              await msg.delete().catch((err) => {
+                console.log(
+                  "[error] couldn't delete message due to unexpected exception",
+                  err,
+                );
+              });
 
-                const channelId = channel.id;
-                const message = msg.content;
-                const attachments = msg.attachments;
-                eventEmitter.send("messageDeleted", {
-                  user,
-                  userId,
-                  channelId,
-                  message,
-                  attachments,
-                  reason,
-                  sendAt: msg.createdAt,
-                });
-                deletedCount++;
-              }
+              const channelId = channel.id;
+              const message = msg.content;
+              const attachments = msg.attachments;
+              eventEmitter.send("messageDeleted", {
+                user,
+                userId,
+                channelId,
+                message,
+                attachments,
+                reason,
+                sendAt: msg.createdAt,
+              });
+              deletedCount++;
             }
-          })
-          .catch((err) => {
-            console.log(
-              `[error] couldn't process channel messages for channel ${channel.id}`,
-            );
-            console.trace(err);
-          }),
-      );
+          }
+        })
+        .catch((err) => {
+          console.log(
+            `[error] couldn't process channel messages for channel ${channel.id}`,
+          );
+          console.trace(err);
+        });
     }
-    await Promise.all(promises);
 
     const payload = { user, userId, deletedCount, reason };
 
@@ -90,10 +86,7 @@ export const banHijackedAccount = async ({
       `[event] (bannedUser) member ${member.user.tag}, messages deleted: ${deletedCount}, reason: ${reason}`,
     );
 
-    await member.ban({
-      reason,
-      deleteMessageSeconds: Duration.of({ days: 2 }).inSeconds,
-    });
+    await member.ban({ reason });
   } catch (err) {
     console.error("[error] security system failed with exception");
     console.trace(err);
