@@ -1,0 +1,13 @@
+services:
+  bot:
+    container_name: maid-san
+    build:
+      context: .
+    environment:
+      BOT_TOKEN: ${BOT_TOKEN}
+      HONEYPOT_ID: ${HONEYPOT_ID}
+      LOG_CHANNEL_ID: ${LOG_CHANNEL_ID}
+      ALLOWED_FOR_IDS: ${ALLOWED_FOR_IDS}
+      MODERATORS_IDS: ${MODERATORS_IDS}
+    volumes:
+      - ./assets/samples:/app/assets/samples

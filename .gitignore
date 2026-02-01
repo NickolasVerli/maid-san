@@ -1,2 +1,4 @@
 node_modules/
+assets/samples/
+dist/
 .env

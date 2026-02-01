@@ -1,0 +1,26 @@
+diff --git a/node_modules/imghash/dist/index.js b/node_modules/imghash/dist/index.js
+index 657e800..862d7b8 100644
+--- a/node_modules/imghash/dist/index.js
++++ b/node_modules/imghash/dist/index.js
+@@ -94,7 +94,7 @@ async function hash(filepath, bits, format) {
+     const image = await (0, import_image.imageFromBuffer)(fileData);
+     imageData = (0, import_image.getImageData)(image);
+   } catch (error) {
+-    if ((0, import_image_type.default)(fileData).mime === "image/jpeg") {
++    if ((0, import_image_type.default)(fileData)?.mime === "image/jpeg") {
+       imageData = import_jpeg_js.default.decode(fileData, {
+         maxMemoryUsageInMB: JPEG_MAX_MEMORY_USAGE_MB
+       });
+diff --git a/node_modules/imghash/dist/index.mjs b/node_modules/imghash/dist/index.mjs
+index c41a214..86f19db 100644
+--- a/node_modules/imghash/dist/index.mjs
++++ b/node_modules/imghash/dist/index.mjs
+@@ -77,7 +77,7 @@ var require_index = __commonJS({
+         const image = await imageFromBuffer(fileData);
+         imageData = getImageData(image);
+       } catch (error) {
+-        if (imageType(fileData).mime === "image/jpeg") {
++        if (imageType(fileData)?.mime === "image/jpeg") {
+           imageData = jpeg.decode(fileData, {
+             maxMemoryUsageInMB: JPEG_MAX_MEMORY_USAGE_MB
+           });

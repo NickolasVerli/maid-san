@@ -1,0 +1,1 @@
+export const MIN_MATCH_WITH_SAMPLE_IMAGE = 5;
