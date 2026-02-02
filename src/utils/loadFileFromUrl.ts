@@ -8,13 +8,13 @@ export const loadFileFromUrl = async (
   const res = await fetch(url, { signal });
   if (!res.ok)
     throw new Error(
-      `[error]: fetch failed with status ${res.status} ${res.statusText}`,
+      `[error] fetch failed with status ${res.status} ${res.statusText}`,
     );
 
   const arrayBuffer = await res.arrayBuffer();
 
   if (arrayBuffer.byteLength === 0) {
-    throw new Error("[error]: empty file received");
+    throw new Error("[error] empty file received");
   }
 
   const buffer = Buffer.from(arrayBuffer);

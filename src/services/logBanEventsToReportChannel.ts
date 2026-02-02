@@ -8,7 +8,7 @@ export const logBanEventsToReportChannel: Observer<BanEventEmitterPayload> =
     const logChannel = await discordClient.channels.fetch(config.logChannel);
 
     if (!logChannel || !logChannel.isTextBased() || logChannel.isDMBased()) {
-      console.log("[warn]: the passed channel id is invalid");
+      console.log("[warn] the passed channel id is invalid");
       return;
     }
 
@@ -28,9 +28,9 @@ export const logBanEventsToReportChannel: Observer<BanEventEmitterPayload> =
     );
 
     await logChannel.send({ embeds: [embed] }).catch((err: unknown) => {
-      console.log("[error]: couldn't send a log of ban due to exception");
+      console.log("[error] couldn't send a log of ban due to exception");
       console.trace(err);
     });
   };
 
-logBanEventsToReportChannel.observerName = `logBanEventsToReportChannel`
+logBanEventsToReportChannel.observerName = `logBanEventsToReportChannel`;

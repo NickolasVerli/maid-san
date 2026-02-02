@@ -49,7 +49,7 @@ export const getConfig = () => {
   }
   if (!allowedRoles.length)
     console.warn(
-      `\n\n[warn]: the env variable ALLOWED_FOR_IDS seems to be empty, maid-san recommend checking if this is intentional ${getRandomEmote()}\n\n`,
+      `\n\n[warn] the env variable ALLOWED_FOR_IDS seems to be empty, maid-san recommend checking if this is intentional ${getRandomEmote()}\n\n`,
     );
 
   return {

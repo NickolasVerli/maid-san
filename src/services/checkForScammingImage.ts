@@ -9,9 +9,6 @@ import { banHijackedAccount } from "../utils/banHijackedAccount";
 import { compareImageWithSamples } from "../utils/compareImageWithSamples";
 import { loadFileFromUrl } from "../utils/loadFileFromUrl";
 
-const isArrayBuffer = (file: unknown): file is Buffer<ArrayBuffer> =>
-  Boolean(file);
-
 const EXPECTED_EROR = "expected";
 interface CheckForScammingImageProps {
   message: OmitPartialGroupDMChannel<Message<boolean>>;
@@ -60,7 +57,14 @@ export const checkForScammingImage = async ({
 
         if (!fileBuffer) return console.log("[error] error processing file");
 
-        const result = await compareImageWithSamples(fileBuffer);
+        const result = await compareImageWithSamples(fileBuffer).catch(
+          (err) => {
+            console.log(
+              `[error] couldn't process file ${JSON.stringify(attach.name)} (${attach.url})`,
+            );
+            console.trace(err);
+          },
+        );
 
         if (result) {
           res(true);

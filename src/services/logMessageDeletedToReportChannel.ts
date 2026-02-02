@@ -11,7 +11,7 @@ export const logMessageDeletedToReportChannel: Observer<
   const logChannel = await discordClient.channels.fetch(config.logChannel);
 
   if (!logChannel || !logChannel.isTextBased() || logChannel.isDMBased())
-    return console.log("[warn]: the passed channel id is invalid");
+    return console.log("[warn] the passed channel id is invalid");
 
   const { userId, message: msg, attachments, sendAt, channelId } = payload;
   const delayToRespond = Duration.between(new Date(), sendAt);
@@ -40,7 +40,7 @@ export const logMessageDeletedToReportChannel: Observer<
   console.log("[info] sending deleted message to report channel");
 
   await logChannel.send({ embeds: [embed], files }).catch((err: unknown) => {
-    console.log("[error]: couldn't send a log of exclusion due to exception:");
+    console.log("[error] couldn't send a log of exclusion due to exception:");
     console.trace(err);
   });
 };
