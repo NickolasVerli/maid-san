@@ -5,9 +5,13 @@ import { join } from "node:path";
 import sharp from "sharp";
 import { MIN_MATCH_WITH_SAMPLE_IMAGE } from "../constants/imageParams";
 import { getSampleHash } from "./getSampleHash";
+import { fileTypeFromBuffer } from "file-type";
 
 export const compareImageWithSamples = async (file: Buffer<ArrayBuffer>) => {
   if (file.length === 0) return false;
+
+  const fileType = (await fileTypeFromBuffer(file))!;
+  if (!fileType.mime.startsWith("image/")) return false;
 
   const fileNormalized = await sharp(file).rotate().toFormat("png").toBuffer();
   const fileHash = await imghash.hash(fileNormalized);

@@ -16,6 +16,7 @@
   "description": "",
   "dependencies": {
     "discord.js": "^14.25.1",
+    "file-type": "^21.3.0",
     "imghash": "^1.1.2",
     "js-duration": "^0.0.5",
     "leven": "^4.1.0",
