@@ -5,6 +5,7 @@ import {
 } from "discord.js";
 import { config } from "../config";
 import { banReason } from "../constants/banReasons";
+import { MIN_MATCHES_TO_BAN } from "../constants/imageParams";
 import { banHijackedAccount } from "../utils/banHijackedAccount";
 import { compareImageWithSamples } from "../utils/compareImageWithSamples";
 import { loadFileFromUrl } from "../utils/loadFileFromUrl";
@@ -40,8 +41,9 @@ export const checkForScammingImage = async ({
   const comparisonResults = await new Promise<boolean>(async (res) => {
     const requests = new AbortController();
 
+    let countMatches = 0;
     const result = await Promise.all(
-      attachs.map(async (attach) => {
+      attachs.toArray().map(async (attach, _, arr) => {
         const file = await loadFileFromUrl(
           attach.url,
           attach.name,
@@ -68,10 +70,14 @@ export const checkForScammingImage = async ({
         );
 
         if (result) {
-          res(true);
-          requests.abort();
+          countMatches++;
 
-          return true;
+          if (countMatches >= Math.min(arr.length, MIN_MATCHES_TO_BAN)) {
+            res(true);
+            requests.abort();
+
+            return true;
+          }
         }
 
         return false;
