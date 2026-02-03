@@ -13,14 +13,14 @@ export const logMessageDeletedToReportChannel: Observer<
   if (!logChannel || !logChannel.isTextBased() || logChannel.isDMBased())
     return console.log("[warn] the passed channel id is invalid");
 
-  const { userId, message: msg, attachments, sendAt, channelId } = payload;
+  const { user, message: msg, attachments, sendAt, channelId } = payload;
   const delayToRespond = Duration.between(new Date(), sendAt);
 
   const embed = new EmbedBuilder()
     .setColor(0xff5555)
     .setTitle("Message deleted automatically")
     .setFields([
-      { name: "User", value: `<@${userId}>`, inline: true },
+      { name: "User", value: `<@${user.id}>`, inline: true },
       { name: "Channel", value: `<#${channelId}>` },
       { name: "Message", value: JSON.stringify(msg), inline: true },
       { name: "Time to delete", value: delayToRespond.toString() },

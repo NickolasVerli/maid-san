@@ -5,7 +5,7 @@ import { BanEventEmitterPayload, Observer } from "../types";
 export const logToMemberDmBanReason: Observer<BanEventEmitterPayload> = async (
   payload,
 ) => {
-  const member = await discordClient.users.fetch(payload.userId);
+  const member = await discordClient.users.fetch(payload.user.id);
 
   const userDM = await member.createDM();
 

@@ -1,6 +1,5 @@
 import {
   ChannelType,
-  DMChannel,
   type GuildMember,
   type Message,
   type OmitPartialGroupDMChannel,
@@ -11,7 +10,6 @@ import { eventEmitter } from "../config";
 interface BanHijackedAccountProps {
   member: GuildMember;
   message: OmitPartialGroupDMChannel<Message<boolean>>;
-  user: string;
   userId: string;
   reason: string;
 }
@@ -22,7 +20,6 @@ export const banHijackedAccount = async ({
   member,
   message,
   reason,
-  user,
   userId,
 }: BanHijackedAccountProps) => {
   try {
@@ -60,8 +57,7 @@ export const banHijackedAccount = async ({
               const message = msg.content;
               const attachments = msg.attachments;
               eventEmitter.send("messageDeleted", {
-                user,
-                userId,
+                user: member,
                 channelId,
                 message,
                 attachments,
@@ -80,7 +76,7 @@ export const banHijackedAccount = async ({
         });
     }
 
-    const payload = { user, userId, deletedCount, reason };
+    const payload = { user: member, userId, deletedCount, reason };
 
     await eventEmitter.send("bannedUser", payload);
     console.log(

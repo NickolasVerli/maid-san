@@ -96,7 +96,6 @@ export const checkForScammingImage = async ({
       message,
       member,
       userId,
-      user,
     });
   }
 };

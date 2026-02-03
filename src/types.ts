@@ -1,15 +1,13 @@
-import { Attachment, Collection } from "discord.js";
+import { Attachment, Collection, GuildMember } from "discord.js";
 
 export interface BanEventEmitterPayload {
-  user: string;
-  userId: string;
+  user: GuildMember;
   reason: string;
   deletedCount: number;
 }
 
 export interface MessageDeletedEventEmitterPayload {
-  user: string;
-  userId: string;
+  user: GuildMember;
   channelId: string;
   message: string;
   attachments: Collection<string, Attachment>;

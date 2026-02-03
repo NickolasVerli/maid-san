@@ -37,6 +37,5 @@ export const honeypotValidation = async ({
     message,
     userId,
     member,
-    user,
   });
 };

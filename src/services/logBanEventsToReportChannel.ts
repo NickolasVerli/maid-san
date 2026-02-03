@@ -12,12 +12,12 @@ export const logBanEventsToReportChannel: Observer<BanEventEmitterPayload> =
       return;
     }
 
-    const { userId, deletedCount, reason } = payload;
+    const { user, deletedCount, reason } = payload;
     const embed = new EmbedBuilder()
       .setColor(0xff5555)
       .setTitle("Automatic ban")
       .setFields([
-        { name: "User", value: `<@${userId}>`, inline: true },
+        { name: "User", value: `<@${user.id}>`, inline: true },
         { name: "Deleted", value: deletedCount.toString(), inline: true },
         { name: "Date", value: `<t:${~~(Date.now() / 1000)}:F>` },
       ])

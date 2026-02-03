@@ -30,4 +30,6 @@ WORKDIR /app
 COPY --from=cleaner /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 
+USER node
+
 CMD ["node", "/app/dist/index.js"]
