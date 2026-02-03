@@ -1,35 +1,30 @@
+import { fileTypeFromBuffer } from "file-type";
 import imghash from "imghash";
 import leven from "leven";
-import { readdir } from "node:fs/promises";
-import { join } from "node:path";
 import sharp from "sharp";
 import { MIN_MATCH_WITH_SAMPLE_IMAGE } from "../constants/imageParams";
 import { getSampleHash } from "./getSampleHash";
-import { fileTypeFromBuffer } from "file-type";
+import { getSamplesFilenames } from "./getSamplesFilenames";
 
-export const compareImageWithSamples = async (file: Buffer<ArrayBuffer>) => {
+export const compareImageWithSamples = async (file: Buffer) => {
   if (file.length === 0) return false;
 
-  const fileType = (await fileTypeFromBuffer(file))!;
-  if (!fileType.mime.startsWith("image/")) return false;
+  const fileType = await fileTypeFromBuffer(file);
+  if (!fileType?.mime.startsWith("image/")) return false;
 
   const fileNormalized = await sharp(file).rotate().toFormat("png").toBuffer();
   const fileHash = await imghash.hash(fileNormalized);
 
-  const samplesPath = join(__dirname, "..", "..", "assets", "samples");
-  const samplesFilenames = await readdir(samplesPath);
+  const samplesFilenames = await getSamplesFilenames();
 
   for (const p of samplesFilenames) {
     try {
-      const sampleHash = await getSampleHash(join(samplesPath, p));
+      const sampleHash = await getSampleHash(p);
 
       if (leven(sampleHash, fileHash) <= MIN_MATCH_WITH_SAMPLE_IMAGE)
         return true;
     } catch (err) {
-      if (!p.endsWith(".gitkeep"))
-        console.log(
-          `[error]: couldn't process the file ${p} in sample dir, please, try converting the image to another format`,
-        );
+      console.log(`[error] sample "${p}" could not be decoded as image`);
     }
   }
 
