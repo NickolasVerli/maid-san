@@ -9,10 +9,11 @@ import { banHijackedAccount } from "../utils/banHijackedAccount";
 import { compareImageWithSamples } from "../utils/compareImageWithSamples";
 import { loadFileFromUrl } from "../utils/loadFileFromUrl";
 
-const EXPECTED_EROR = "expected";
 interface CheckForScammingImageProps {
   message: OmitPartialGroupDMChannel<Message<boolean>>;
 }
+
+const EXPECTED_EROR = Symbol("expected");
 
 export const checkForScammingImage = async ({
   message,

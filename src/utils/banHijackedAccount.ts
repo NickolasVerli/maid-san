@@ -51,8 +51,9 @@ export const banHijackedAccount = async ({
               await msg.delete().catch((err) => {
                 console.log(
                   "[error] couldn't delete message due to unexpected exception",
-                  err,
                 );
+                if (err instanceof Error && err.name !== "AggregateError")
+                  console.log(err);
               });
 
               const channelId = channel.id;
