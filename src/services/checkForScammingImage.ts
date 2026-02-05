@@ -88,14 +88,10 @@ export const checkForScammingImage = async ({
   });
 
   if (comparisonResults) {
-    const user = member.user.tag;
-    const userId = member.id;
-
     banHijackedAccount({
       reason: banReason.IMAGE_MATCH,
       message,
       member,
-      userId,
     });
   }
 };

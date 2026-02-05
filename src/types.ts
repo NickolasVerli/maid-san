@@ -1,4 +1,12 @@
-import { Attachment, Collection, GuildMember } from "discord.js";
+import {
+  GuildMember,
+  Message,
+  NewsChannel,
+  OmitPartialGroupDMChannel,
+  StageChannel,
+  TextChannel,
+  VoiceChannel,
+} from "discord.js";
 
 export interface BanEventEmitterPayload {
   user: GuildMember;
@@ -8,11 +16,9 @@ export interface BanEventEmitterPayload {
 
 export interface MessageDeletedEventEmitterPayload {
   user: GuildMember;
-  channelId: string;
-  message: string;
-  attachments: Collection<string, Attachment>;
+  message: Message<true> | OmitPartialGroupDMChannel<Message<boolean>>;
   reason: string;
-  sendAt: Date;
+  channel: NewsChannel | StageChannel | TextChannel | VoiceChannel;
 }
 
 export type EventEmitterPayload =

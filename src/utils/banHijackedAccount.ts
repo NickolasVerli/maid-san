@@ -1,88 +1,95 @@
 import {
   ChannelType,
+  NewsChannel,
+  StageChannel,
+  TextChannel,
+  VoiceChannel,
   type GuildMember,
   type Message,
   type OmitPartialGroupDMChannel,
 } from "discord.js";
 import { Duration } from "js-duration";
 import { eventEmitter } from "../config";
+import { deleteMessage } from "./deleteMessage";
 
 interface BanHijackedAccountProps {
   member: GuildMember;
   message: OmitPartialGroupDMChannel<Message<boolean>>;
-  userId: string;
   reason: string;
 }
-
-const _14_days_duration = Duration.of({ days: 14 });
 
 export const banHijackedAccount = async ({
   member,
   message,
   reason,
-  userId,
 }: BanHijackedAccountProps) => {
   try {
-    let deletedCount = 0;
+    let deletedCount = 1;
+
+    await deleteMessage({
+      message,
+      user: member,
+      reason,
+      channel: message.channel as
+        | NewsChannel
+        | StageChannel
+        | TextChannel
+        | VoiceChannel,
+    });
 
     const channels = message.guild?.channels.cache.filter(
       (c) => c.type === ChannelType.GuildText && c.viewable,
     );
 
-    for (const channel of channels?.values() ?? []) {
-      if (!channel.isTextBased() || channel.isDMBased() || channel.isThread())
-        continue;
+    const listOfChannels = channels?.values() ?? [];
 
-      channel.messages
-        .fetch({ limit: 100 })
-        .then(async (messages) => {
+    await Promise.all(
+      listOfChannels.map(async (channel) => {
+        if (!channel.isTextBased() || channel.isDMBased() || channel.isThread())
+          return;
+
+        const messages = await channel.messages.fetch({ limit: 100 });
+
+        try {
           if (messages.size === 0) return;
 
-          for (const msg of messages.values()) {
-            const idade = Date.now() - msg.createdTimestamp;
+          await Promise.all(
+            messages.values().map(async (msg) => {
+              const idade = Duration.between(
+                new Date(message.createdTimestamp),
+                new Date(),
+              ).abs();
+              const isRecent = idade.lessThan(Duration.of({ hours: 3 }));
 
-            const isTheSameHijackedUser = msg.author.id === member.id;
-            const isFromlast14Days = idade < _14_days_duration.inMilliseconds;
+              const isHijackedUser = msg.author.id === member.id;
 
-            if (isTheSameHijackedUser && isFromlast14Days) {
-              await msg.delete().catch((err) => {
-                console.log(
-                  "[error] couldn't delete message due to unexpected exception",
-                );
-                if (err instanceof Error && err.name !== "AggregateError")
-                  console.log(err);
-              });
-
-              const channelId = channel.id;
-              const message = msg.content;
-              const attachments = msg.attachments;
-              eventEmitter.send("messageDeleted", {
-                user: member,
-                channelId,
-                message,
-                attachments,
-                reason,
-                sendAt: msg.createdAt,
-              });
-              deletedCount++;
-            }
-          }
-        })
-        .catch((err) => {
+              if (isHijackedUser && isRecent) {
+                deletedCount++;
+                await deleteMessage({
+                  message: msg,
+                  user: member,
+                  channel,
+                  reason,
+                });
+              }
+            }),
+          );
+        } catch (err) {
           console.log(
             `[error] couldn't process channel messages for channel ${channel.id}`,
           );
           console.trace(err);
-        });
-    }
+        }
+      }),
+    );
 
-    const payload = { user: member, userId, deletedCount, reason };
+    const payload = { user: member, deletedCount, reason };
 
-    await eventEmitter.send("bannedUser", payload);
     console.log(
       `[event] (bannedUser) member ${member.user.tag}, messages deleted: ${deletedCount}, reason: ${reason}`,
     );
 
+    await eventEmitter.send("bannedUser", payload);
     await member.ban({ reason });
   } catch (err) {
     console.error("[error] security system failed with exception");

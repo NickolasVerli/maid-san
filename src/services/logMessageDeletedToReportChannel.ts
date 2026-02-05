@@ -13,15 +13,15 @@ export const logMessageDeletedToReportChannel: Observer<
   if (!logChannel || !logChannel.isTextBased() || logChannel.isDMBased())
     return console.log("[warn] the passed channel id is invalid");
 
-  const { user, message: msg, attachments, sendAt, channelId } = payload;
-  const delayToRespond = Duration.between(new Date(), sendAt);
+  const { user, message: msg } = payload;
+  const delayToRespond = Duration.between(new Date(), msg.createdAt);
 
   const embed = new EmbedBuilder()
     .setColor(0xff5555)
     .setTitle("Message deleted automatically")
     .setFields([
       { name: "User", value: `<@${user.id}>`, inline: true },
-      { name: "Channel", value: `<#${channelId}>` },
+      { name: "Channel", value: `<#${msg.channel.id}>` },
       { name: "Message", value: JSON.stringify(msg), inline: true },
       { name: "Time to delete", value: delayToRespond.toString() },
       { name: "Date", value: `<t:${~~(Date.now() / 1000)}:F>` },
@@ -29,7 +29,7 @@ export const logMessageDeletedToReportChannel: Observer<
     .setFooter({ text: `Motivo: ${payload.reason}` });
 
   const files = await Promise.all(
-    attachments
+    msg.attachments
       .values()
       .map(
         async (attch) =>

@@ -29,13 +29,9 @@ export const honeypotValidation = async ({
   // extra protection to admin
   if (member.permissions.has(PermissionsBitField.Flags.Administrator)) return;
 
-  const user = member.user.tag;
-  const userId = member.id;
-
   banHijackedAccount({
     reason: banReason.HONEYPOT,
     message,
-    userId,
     member,
   });
 };
