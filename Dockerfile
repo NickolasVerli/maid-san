@@ -27,8 +27,8 @@ FROM base AS runner
 
 WORKDIR /app
 
-COPY --from=cleaner /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
+COPY --from=cleaner --chown=node:node /app/node_modules ./node_modules
+COPY --from=builder --chown=node:node /app/dist ./dist
 
 USER node
 
