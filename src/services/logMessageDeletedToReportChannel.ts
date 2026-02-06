@@ -22,7 +22,7 @@ export const logMessageDeletedToReportChannel: Observer<
     .setFields([
       { name: "User", value: `<@${user.id}>`, inline: true },
       { name: "Channel", value: `<#${msg.channel.id}>` },
-      { name: "Message", value: JSON.stringify(msg), inline: true },
+      { name: "Message", value: JSON.stringify(msg.content), inline: true },
       { name: "Time to delete", value: delayToRespond.toString() },
       { name: "Date", value: `<t:${~~(Date.now() / 1000)}:F>` },
     ])
