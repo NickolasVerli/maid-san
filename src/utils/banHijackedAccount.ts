@@ -41,6 +41,15 @@ export const banHijackedAccount = async ({
       (c) => c.type === ChannelType.GuildText && c.viewable,
     );
 
+    const payload = { user: member, deletedCount, reason };
+
+    console.log(
+      `[event] (bannedUser) member ${member.user.tag}, messages deleted: ${deletedCount}, reason: ${reason}`,
+    );
+
+    await eventEmitter.send("bannedUser", payload);
+    await member.ban({ reason });
+
     const listOfChannels = channels?.values() ?? [];
 
     await Promise.all(
@@ -82,15 +91,6 @@ export const banHijackedAccount = async ({
         }
       }),
     );
-
-    const payload = { user: member, deletedCount, reason };
-
-    console.log(
-      `[event] (bannedUser) member ${member.user.tag}, messages deleted: ${deletedCount}, reason: ${reason}`,
-    );
-
-    await eventEmitter.send("bannedUser", payload);
-    await member.ban({ reason });
   } catch (err) {
     console.error("[error] security system failed with exception");
     console.trace(err);

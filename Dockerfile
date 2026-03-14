@@ -4,10 +4,10 @@ FROM base AS builder
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
-COPY patches ./patches
+COPY .yarn .yarn
+COPY package.json .yarnrc.yml yarn.lock ./
 
-RUN yarn --frozen-lockfile
+RUN corepack enable && yarn install --immutable
 
 COPY . .
 
@@ -17,11 +17,12 @@ FROM base AS cleaner
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
+COPY .yarn .yarn
+COPY package.json .yarnrc.yml yarn.lock ./
 COPY patches ./patches
 
-RUN yarn --frozen-lockfile --production
-RUN yarn patch
+RUN corepack enable && yarn install --immutable
+RUN yarn run patch
 
 FROM base AS runner
 

@@ -8,7 +8,11 @@ export const loadFileFromUrl = async (
   const res = await fetch(url, { signal });
   if (!res.ok)
     throw new Error(
-      `[error] fetch failed with status ${res.status} ${res.statusText}`,
+      [
+        `[error] fetch failed with status ${res.status} ${res.statusText}`,
+        `\turl: ${url}`,
+        `\tfilename: ${filename}`,
+      ].join("\n"),
     );
 
   const arrayBuffer = await res.arrayBuffer();

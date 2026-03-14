@@ -1,19 +1,20 @@
 {
   "name": "bot",
+  "description": "",
   "version": "1.0.0",
   "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "yarn@4.13.0",
   "scripts": {
     "build": "tsc",
     "predev": "yarn build",
     "dev": "node --env-file=.env ./dist/index.js",
     "start": "node --env-file=.env ./dist/index.js",
-    "postinstall": "yarn patch",
-    "patch": "patch-package"
+    "postinstall": "yarn run patch",
+    "patch": "yarn run patch-package"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "discord.js": "^14.25.1",
     "file-type": "^21.3.0",
