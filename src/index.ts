@@ -23,6 +23,7 @@ discordClient.on("messageCreate", messageObserver);
 discordClient.on("interactionCreate", handleInteraction);
 
 eventEmitter.subscribe("bannedUser", logToMemberDmBanReason);
+
 if (config.logChannel) {
   eventEmitter.subscribe("bannedUser", logBanEventsToReportChannel);
   eventEmitter.subscribe("messageDeleted", logMessageDeletedToReportChannel);
