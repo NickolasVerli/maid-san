@@ -1,7 +1,7 @@
 import { EmbedBuilder } from "discord.js";
-import { config } from "../config";
-import { discordClient } from "../config/discord";
-import type { BanEventEmitterPayload, Observer } from "../types";
+import { config } from "../../config";
+import { discordClient } from "../../config/discord";
+import type { BanEventEmitterPayload, Observer } from "../../types";
 
 export const logBanEventsToReportChannel: Observer<BanEventEmitterPayload> =
   async function (payload) {

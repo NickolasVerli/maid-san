@@ -2,7 +2,7 @@ import { fileTypeFromBuffer } from "file-type";
 import imghash from "imghash";
 import leven from "leven";
 import sharp from "sharp";
-import { MIN_MATCH_WITH_SAMPLE_IMAGE } from "../constants/imageParams";
+import { MIN_MATCH_WITH_SAMPLE_IMAGE } from "../../../constants/imageParams";
 import { getSampleHash } from "./getSampleHash";
 import { getSamplesFilenames } from "./getSamplesFilenames";
 

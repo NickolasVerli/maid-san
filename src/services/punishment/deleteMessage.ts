@@ -7,7 +7,7 @@ import {
   TextChannel,
   VoiceChannel,
 } from "discord.js";
-import { eventEmitter } from "../config";
+import { eventEmitter } from "../../events/eventEmitter";
 
 interface DeleteMessageProps {
   message: Message<true> | OmitPartialGroupDMChannel<Message<boolean>>;

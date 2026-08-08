@@ -1,9 +1,9 @@
 import { EmbedBuilder } from "discord.js";
 import { Duration } from "js-duration";
-import { config } from "../config";
-import { discordClient } from "../config/discord";
-import { MessageDeletedEventEmitterPayload, Observer } from "../types";
-import { loadFileFromUrl } from "../utils/loadFileFromUrl";
+import { config } from "../../config";
+import { discordClient } from "../../config/discord";
+import { MessageDeletedEventEmitterPayload, Observer } from "../../types";
+import { loadFileFromUrl } from "../../utils/loadFileFromUrl";
 
 export const logMessageDeletedToReportChannel: Observer<
   MessageDeletedEventEmitterPayload

@@ -5,6 +5,8 @@ import { getRandomEmote } from "../utils/randomEmote";
 export const getConfig = () => {
   const {
     ALLOWED_FOR_IDS,
+    EXCLUDED_CHANNELS,
+    GUILD_ID,
     BOT_TOKEN,
     HONEYPOT_ID,
     LOG_CHANNEL_ID,
@@ -13,9 +15,24 @@ export const getConfig = () => {
 
   const allowedRoles = (ALLOWED_FOR_IDS?.split(",") ?? []).map((w) => w.trim());
   const moderators = (MODERATORS_IDS?.split(",") ?? []).map((w) => w.trim());
+  const excludedChannels = (EXCLUDED_CHANNELS?.split(",") ?? []).map((w) =>
+    w.trim(),
+  );
+  const honeypotChannels = (HONEYPOT_ID?.split(",") ?? [])
+    .map((w) => w.trim())
+    .filter(Boolean);
 
   const samplesDirpath = join(__dirname, "..", "..", "assets", "samples");
   const hasSamplesDir = existsSync(samplesDirpath);
+
+  const regexPatternsPath = join(
+    __dirname,
+    "..",
+    "..",
+    "assets",
+    "regex_patterns.txt",
+  );
+  const hasRegexPatterns = existsSync(regexPatternsPath);
 
   if (!hasSamplesDir)
     console.log(
@@ -35,6 +52,10 @@ export const getConfig = () => {
     );
     throw new Error("missing BOT_TOKEN env");
   }
+  if (!GUILD_ID)
+    console.warn(
+      `\n\n[warn] the env variable GUILD_ID seems to be empty, maid-san need it to register the commands for admins to use ${getRandomEmote()}\n\n`,
+    );
   if (!HONEYPOT_ID)
     console.warn(
       `\n\n[warn] the env variable HONEYPOT_ID seems to be empty, maid-san won't be able to clean most usual mass span attacks if one is not provided ${getRandomEmote()}\n\n`,
@@ -51,13 +72,22 @@ export const getConfig = () => {
     console.warn(
       `\n\n[warn] the env variable ALLOWED_FOR_IDS seems to be empty, maid-san recommend checking if this is intentional ${getRandomEmote()}\n\n`,
     );
+  if (!hasRegexPatterns)
+    console.warn(
+      `\n\n[warn] maid-san couldn't find a regex patterns file at ${regexPatternsPath}, the regex strategy will be disabled until one is provided ${getRandomEmote()}\n\n`,
+    );
 
   return {
+    guildId: GUILD_ID,
     botToken: BOT_TOKEN!,
-    honeypot: HONEYPOT_ID!,
+    honeypotChannels,
     logChannel: LOG_CHANNEL_ID!,
     moderators,
     hasSamplesDir,
+    samplesDir: samplesDirpath,
+    hasRegexPatterns,
+    regexPatternsPath,
     allowedRoles,
+    excludedChannels,
   };
 };

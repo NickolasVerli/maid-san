@@ -5,9 +5,12 @@ services:
       context: .
     environment:
       BOT_TOKEN: ${BOT_TOKEN}
+      GUILD_ID: ${GUILD_ID}
       HONEYPOT_ID: ${HONEYPOT_ID}
       LOG_CHANNEL_ID: ${LOG_CHANNEL_ID}
       ALLOWED_FOR_IDS: ${ALLOWED_FOR_IDS}
+      EXCLUDED_CHANNELS: ${EXCLUDED_CHANNELS}
       MODERATORS_IDS: ${MODERATORS_IDS}
     volumes:
       - ./assets/samples:/app/assets/samples
+      - ./assets/regex_patterns.txt:/app/assets/regex_patterns.txt

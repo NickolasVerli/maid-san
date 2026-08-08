@@ -1,5 +1,6 @@
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
+import { config } from "../../../config";
 
 const samplesCache = {
   cachedFilenames: [] as string[],
@@ -13,14 +14,12 @@ export const getSamplesFilenames = async () => {
     return samplesCache.cachedFilenames;
   }
 
-  const samplesPath = join(__dirname, "..", "..", "assets", "samples");
-
-  const samplesFilenames = await readdir(samplesPath);
+  const samplesFilenames = await readdir(config.samplesDir);
 
   samplesCache.lastCached = now;
   samplesCache.cachedFilenames = samplesFilenames
     .filter((p) => !p.startsWith("."))
-    .map((p) => join(samplesPath, p));
+    .map((p) => join(config.samplesDir, p));
 
   return samplesCache.cachedFilenames;
 };

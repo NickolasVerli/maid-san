@@ -1,6 +1,6 @@
 import { DiscordAPIError } from "discord.js";
-import { config, discordClient } from "../config";
-import { BanEventEmitterPayload, Observer } from "../types";
+import { config, discordClient } from "../../config";
+import { BanEventEmitterPayload, Observer } from "../../types";
 
 export const logToMemberDmBanReason: Observer<BanEventEmitterPayload> = async (
   payload,

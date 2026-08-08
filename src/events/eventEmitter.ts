@@ -1,4 +1,4 @@
-import type { MaidSanEvent, MappedEvents, Observer } from "../types";
+import type { EventEmitterPayload, MaidSanEvent, MappedEvents, Observer } from "../types";
 
 export const createEventEmitter = <
   T,
@@ -50,3 +50,5 @@ export const createEventEmitter = <
     subscribe,
   };
 };
+
+export const eventEmitter = createEventEmitter<EventEmitterPayload>();
