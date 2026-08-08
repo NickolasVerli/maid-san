@@ -3,4 +3,5 @@ assets/*
 dist/
 .env
 
-.yarn/install-state.gz
+.yarn/*
+!.yarn/releases
