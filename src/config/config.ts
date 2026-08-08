@@ -25,14 +25,8 @@ export const getConfig = () => {
   const samplesDirpath = join(__dirname, "..", "..", "assets", "samples");
   const hasSamplesDir = existsSync(samplesDirpath);
 
-  const regexPatternsPath = join(
-    __dirname,
-    "..",
-    "..",
-    "assets",
-    "regex_patterns.txt",
-  );
-  const hasRegexPatterns = existsSync(regexPatternsPath);
+  const regexPatternsDir = join(__dirname, "..", "..", "assets", "regex");
+  const hasRegexPatterns = existsSync(regexPatternsDir);
 
   if (!hasSamplesDir)
     console.log(
@@ -74,7 +68,7 @@ export const getConfig = () => {
     );
   if (!hasRegexPatterns)
     console.warn(
-      `\n\n[warn] maid-san couldn't find a regex patterns file at ${regexPatternsPath}, the regex strategy will be disabled until one is provided ${getRandomEmote()}\n\n`,
+      `\n\n[warn] maid-san couldn't find a regex patterns dir at ${regexPatternsDir}, the regex strategy will be disabled until one is provided ${getRandomEmote()}\n\n`,
     );
 
   return {
@@ -86,7 +80,7 @@ export const getConfig = () => {
     hasSamplesDir,
     samplesDir: samplesDirpath,
     hasRegexPatterns,
-    regexPatternsPath,
+    regexPatternsDir,
     allowedRoles,
     excludedChannels,
   };

@@ -12,5 +12,8 @@ services:
       EXCLUDED_CHANNELS: ${EXCLUDED_CHANNELS}
       MODERATORS_IDS: ${MODERATORS_IDS}
     volumes:
-      - ./assets/samples:/app/assets/samples
-      - ./assets/regex_patterns.txt:/app/assets/regex_patterns.txt
+      - samples:/app/assets/samples
+      - regex_patterns:/app/assets/regex
+volumes:
+  samples:
+  regex_patterns:
