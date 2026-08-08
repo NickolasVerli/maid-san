@@ -12,7 +12,7 @@ services:
       EXCLUDED_CHANNELS: ${EXCLUDED_CHANNELS}
       MODERATORS_IDS: ${MODERATORS_IDS}
     volumes:
-      - samples:/app/assets/samples
+      - samples:/app/assets/samples:ro
       - regex_patterns:/app/assets/regex
 volumes:
   samples:
