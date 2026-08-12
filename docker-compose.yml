@@ -1,6 +1,7 @@
 services:
   bot:
     container_name: maid-san
+    restart: unless-stopped
     build:
       context: .
     environment:
